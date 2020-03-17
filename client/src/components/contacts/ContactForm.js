@@ -2,52 +2,54 @@ import React, {useState,useContext, useEffect} from 'react';
 import ContactContext from '../context/contact/contactContext';
 
 const ContactForm = () => {
-    const contactContext = useContext(ContactContext);
+  const contactContext = useContext(ContactContext);
 
-    const {addContact,updateContact,clearCurrent, current }=contactContext;
-useEffect(()=>{
-  if (current !==null){
-    setContact(current);
-  }else{
-    setContact({
-      name:'',
-      email:'',
-      phone: '',
-      type: 'personal' 
-  });
-  }
-}, [contactContext,current]);
+  const { addContact, updateContact, clearCurrent, current } = contactContext;
 
-    const [contact, setContact] = useState({
+  useEffect(() => {
+    if (current !== null) {
+      setContact(current);
+    } else {
+      setContact({
+        name: '',
+        email: '',
+        phone: '',
+        type: 'personal'
+      });
+    }
+  }, [contactContext, current]);
+
+  const [contact, setContact] = useState({
     name: '',
     email: '',
     phone: '',
     type: 'personal'
   });
 
-  const {_id, name, email, phone, type } = contact;
+  const { name, email, phone, type } = contact;
 
-    const onChange = e =>
+  const onChange = e =>
     setContact({ ...contact, [e.target.name]: e.target.value });
 
-const onSubmit=e=>{
+  const onSubmit = e => {
     e.preventDefault();
-if(current===null){
-  addContact(contact);
-}else{
-updateContact(contact);
-}
-clearAll();
-}; 
+    if (current === null) {
+      addContact(contact);
+    } else {
+      updateContact(contact);
+    }
+    clearAll();
+  };
 
+  const clearAll = () => {
+    clearCurrent();
+  };
 
-const clearAll=()=>{
-clearCurrent();
-}
-
-return (
+  return (
     <form onSubmit={onSubmit}>
-<h2 className='text-primary'>{current ? 'Edit Contact': 'Add Contact'}</h2>
+      <h2 className='text-primary'>
+        {current ? 'Edit Contact' : 'Add Contact'}
+      </h2>
       <input
         type='text'
         placeholder='Name'
@@ -87,20 +89,21 @@ return (
       />{' '}
       Professional
       <div>
-      <input
-      type='submit'
-      value={current ? 'Update Contact': 'Add Contact'}
-      className='btn btn-primary btn-block'
-    />
+        <input
+          type='submit'
+          value={current ? 'Update Contact' : 'Add Contact'}
+          className='btn btn-primary btn-block'
+        />
+      </div>
+      {current && (
+        <div>
+          <button className='btn btn-light btn-block' onClick={clearAll}>
+            Clear
+          </button>
         </div>
-{current && <div>
-  <button className="btn btn-light btn-block" onClick={clearAll}>
-  Clear
-  </button>
-  </div>}
-
-        </form>
-    )
-}
+      )}
+    </form>
+  );
+};
 
 export default ContactForm;
